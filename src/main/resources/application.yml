@@ -26,14 +26,14 @@ spring:
 #    url: jdbc:mysql://192.168.100.123:3306?useSSL=false
 
 
-  # sharding-jdbc
+  # sharding-jdbc 的数据源配置
   shardingsphere:
     datasource:
       names: ds-order-1,ds-order-2
       ds-order-1:
         type: com.zaxxer.hikari.HikariDataSource
         driver-class-name: com.mysql.cj.jdbc.Driver
-        jdbc-url: jdbc:mysql://192.168.100.123:3306/activity_order_1?useSSL=false
+        jdbc-url: jdbc:mysql://192.168.100.123:3306/activity_order_1?useSSL=false&serverTimezone=GMT%2B8
         username: hadoop101
         password: 123123
       ds-order-2:
@@ -48,7 +48,10 @@ spring:
     sharding:
       tables:
         lottery_order:
-          actual-data-nodes: ds-order-${1..2}.lottery_order_$->{0..1}
+          actual-data-nodes: ds-order-$->{1..2}.lottery_order_$->{0..1}  # 定义表的位置
+          key-generator:
+            column: id
+            type: snowflake
           table-strategy:
             standard:
               sharding-column: user_id
@@ -60,7 +63,3 @@ spring:
     props:
       sql:
         show: true
-
-logging:
-  level:
-    root: debug

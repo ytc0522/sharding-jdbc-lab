@@ -18,7 +18,7 @@ public class PreciseHashShardingConfig implements PreciseShardingAlgorithm<Strin
         if (StringUtils.isEmpty(value)) {
             throw new UnsupportedOperationException("分片键值不能为空");
         }
-        // 确定哪一张表
+        // 确定哪一个分片
         int index = hash(value) & (availableTargetNames.size() - 1);
         String[] array = availableTargetNames.toArray(new String[0]);
         return array[index];

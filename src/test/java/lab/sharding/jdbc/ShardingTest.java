@@ -1,7 +1,9 @@
 package lab.sharding.jdbc;
 
 import lab.sharding.jdbc.domain.LotteryOrder;
+import lab.sharding.jdbc.domain.User;
 import lab.sharding.jdbc.service.LotteryOrderService;
+import lab.sharding.jdbc.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,6 +25,8 @@ public class ShardingTest {
 
     @Resource
     private LotteryOrderService orderService;
+    @Resource
+    private UserService userService;
 
 
     @Test
@@ -36,6 +40,20 @@ public class ShardingTest {
 
         boolean saved = orderService.save(lotteryOrder);
         System.out.println("saved = " + saved);
+    }
+
+    /**
+     * 用户表没有做分片，就一张表，专库专表
+     */
+    @Test
+    public void userTest() {
+        User user = new User();
+        user.setUserAge(10);
+        user.setCreateDate(new Date());
+        user.setUserName("王八犊子");
+        user.setCreateDate(new Date());
+
+        userService.save(user);
     }
 
 }

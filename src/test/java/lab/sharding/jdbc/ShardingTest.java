@@ -1,7 +1,9 @@
 package lab.sharding.jdbc;
 
+import lab.sharding.jdbc.domain.Dict;
 import lab.sharding.jdbc.domain.LotteryOrder;
 import lab.sharding.jdbc.domain.User;
+import lab.sharding.jdbc.service.DictService;
 import lab.sharding.jdbc.service.LotteryOrderService;
 import lab.sharding.jdbc.service.UserService;
 import org.junit.Test;
@@ -27,6 +29,8 @@ public class ShardingTest {
     private LotteryOrderService orderService;
     @Resource
     private UserService userService;
+    @Resource
+    private DictService dictService;
 
 
     @Test
@@ -54,6 +58,22 @@ public class ShardingTest {
         user.setCreateDate(new Date());
 
         userService.save(user);
+    }
+
+    @Test
+    public void dictSaveTest() {
+        Dict dict = new Dict();
+        dict.setDictKey("test-key");
+        dict.setStatus(1);
+        dict.setDictValue("test-value");
+
+        dictService.save(dict);
+    }
+
+    @Test
+    public void dictDeleteTest() {
+        boolean success = dictService.removeById(126978);
+        System.out.println("success = " + success);
     }
 
 }

@@ -41,7 +41,7 @@ spring:
         driver-class-name: com.mysql.cj.jdbc.Driver
         username: hadoop101
         password: 123123
-        jdbc-url: jdbc:mysql://192.168.100.123:3306/activity_order_1?useSSL=false
+        jdbc-url: jdbc:mysql://192.168.100.123:3306/activity_order_2?useSSL=false
       user-db:
         type: com.zaxxer.hikari.HikariDataSource
         driver-class-name: com.mysql.cj.jdbc.Driver
@@ -62,6 +62,10 @@ spring:
             inline:
               sharding-column: user_id
               algorithm-expression: t_user
+        t_dict:
+          key-generator:
+            column: id
+            type: snowflake
         lottery_order:
           actual-data-nodes: ds-order-$->{1..2}.lottery_order_$->{0..1}  # 定义表的位置
           key-generator:
@@ -75,6 +79,9 @@ spring:
             standard:
               sharding-column: user_id
               precise-algorithm-class-name: lab.sharding.jdbc.sharding.PreciseHashShardingConfig
+      # 公共表的配置
+      broadcast-tables: t_dict
+
     props:
       sql:
         show: true

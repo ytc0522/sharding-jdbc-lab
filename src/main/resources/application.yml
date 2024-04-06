@@ -1,0 +1,66 @@
+server:
+  port: 7000
+
+
+# Mybatis
+mybatis-plus:
+  global-config:
+    banner: false
+    db-config:
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+      insert-strategy: NOT_NULL
+      update-strategy: NOT_NULL
+      id-type: assign_id
+  configuration:
+    cache-enabled: false
+    map-underscore-to-camel-case: true
+    call-setters-on-nulls: true
+    jdbc-type-for-null: 'null'
+
+spring:
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    username: hadoop101
+#    password: 123123
+#    url: jdbc:mysql://192.168.100.123:3306?useSSL=false
+
+
+  # sharding-jdbc
+  shardingsphere:
+    datasource:
+      names: ds-order-1,ds-order-2
+      ds-order-1:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://192.168.100.123:3306/activity_order_1?useSSL=false
+        username: hadoop101
+        password: 123123
+      ds-order-2:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        username: hadoop101
+        password: 123123
+        jdbc-url: jdbc:mysql://192.168.100.123:3306/activity_order_1?useSSL=false
+
+
+    # 分片策略配置
+    sharding:
+      tables:
+        lottery_order:
+          actual-data-nodes: ds-order-${1..2}.lottery_order_$->{0..1}
+          table-strategy:
+            standard:
+              sharding-column: user_id
+              precise-algorithm-class-name: lab.sharding.jdbc.sharding.PreciseHashShardingConfig
+          database-strategy:
+            standard:
+              sharding-column: user_id
+              precise-algorithm-class-name: lab.sharding.jdbc.sharding.PreciseHashShardingConfig
+    props:
+      sql:
+        show: true
+
+logging:
+  level:
+    root: debug

@@ -29,11 +29,11 @@ spring:
   # sharding-jdbc 的数据源配置
   shardingsphere:
     datasource:
-      names: ds-order-1,ds-order-2,user-db,s0
+      names: ds-order-1,ds-order-2,user-db
       ds-order-1:
         type: com.zaxxer.hikari.HikariDataSource
         driver-class-name: com.mysql.cj.jdbc.Driver
-        jdbc-url: jdbc:mysql://192.168.100.182:3306/activity_order_1?useSSL=false&serverTimezone=GMT%2B8
+        jdbc-url: jdbc:mysql://192.168.100.123:3306/activity_order_1?useSSL=false&serverTimezone=GMT%2B8
         username: hadoop101
         password: 123123
       ds-order-2:
@@ -41,28 +41,20 @@ spring:
         driver-class-name: com.mysql.cj.jdbc.Driver
         username: hadoop101
         password: 123123
-        jdbc-url: jdbc:mysql://192.168.100.182:3306/activity_order_2?useSSL=false
+        jdbc-url: jdbc:mysql://192.168.100.123:3306/activity_order_2?useSSL=false
       user-db:
         type: com.zaxxer.hikari.HikariDataSource
         driver-class-name: com.mysql.cj.jdbc.Driver
         username: hadoop101
         password: 123123
-        jdbc-url: jdbc:mysql://192.168.100.182:3306/user_db?useSSL=false
-#      s0 user-db的从服务器
-      s0:
-        type: com.zaxxer.hikari.HikariDataSource
-        driver-class-name: com.mysql.cj.jdbc.Driver
-        username: hadoop101
-        password: 123123
-        jdbc-url: jdbc:mysql://192.168.100.182:3306/user_db_s0?useSSL=false
+        jdbc-url: jdbc:mysql://192.168.100.123:3306/user_db?useSSL=false
 
 
     # 分片策略配置
     sharding:
       tables:
         t_user:    # 专库专表，垂直分库
-#          actual-data-nodes: user-db.t_user  # 定义表的位置
-          actual-data-nodes: ds0.t_user
+          actual-data-nodes: user-db.t_user  # 定义表的位置
           key-generator:
             column: id
             type: snowflake
@@ -89,11 +81,6 @@ spring:
               precise-algorithm-class-name: lab.sharding.jdbc.sharding.PreciseHashShardingConfig
       # 公共表的配置
       broadcast-tables: t_dict
-      master-slave-rules:
-        ds0:
-          master-data-source-name: user-db
-          slave-data-source-names:
-            - s0
 
     props:
       sql:

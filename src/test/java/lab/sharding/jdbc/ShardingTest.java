@@ -76,4 +76,23 @@ public class ShardingTest {
         System.out.println("success = " + success);
     }
 
+    /**
+     * 测试读写分离
+     */
+    @Test
+    public void testWrite() {
+        User user = new User();
+        user.setId(18882);
+        user.setUserAge(22);
+        user.setCreateDate(new Date());
+        user.setUserName("读写分离");
+        user.setCreateDate(new Date());
+        userService.save(user);
+
+
+        User getUser = userService.getById(18882);
+        System.out.println("getUser = " + getUser);
+
+    }
+
 }
